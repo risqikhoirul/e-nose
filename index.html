@@ -1,24 +1,24 @@
-<script src="rf_model.js"></script>
+<script src="./model_e_nose.js"></script>
 <script>
-  // Ambil parameter dari URL
+  // --- Ambil parameter dari URL ---
   const q = new URLSearchParams(location.search);
   const MQ135 = parseFloat(q.get("MQ135"));
   const MQ9   = parseFloat(q.get("MQ9"));
   const suhu  = parseFloat(q.get("suhu"));
 
-  let hasil = "Tidak ada makanan";
+  let hasil = "test"; // default jika parameter belum diisi
 
+  // --- Jalankan prediksi jika parameter lengkap ---
   if (!isNaN(MQ135) && !isNaN(MQ9) && !isNaN(suhu)) {
-    // Ambil bobot dari model JS
-    const w = rf_model.weights;
-    const t = rf_model.threshold;
+    // urutan input harus sesuai urutan fitur saat training di Python
+    const input = [MQ135, MQ9, suhu];
 
-    // Rumus mirip test_model() di Python
-    const skor = MQ135 * w[0] + MQ9 * w[1] + suhu * w[2];
-    hasil = skor > t ? rf_model.classes[1] : rf_model.classes[0];
+    // panggil fungsi hasil export model m2cgen
+    const pred = score(input); // output array [prob_basi, prob_segar]
+    hasil = pred[0] > pred[1] ? "Makanan Basi" : "Makanan Segar";
   }
 
-  // Output plain text agar ESP32 bisa baca langsung
+  // --- Output plain text agar bisa dibaca ESP32 ---
   document.open("text/plain");
   document.write(hasil);
   document.close();
