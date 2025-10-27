@@ -19,7 +19,7 @@
     const MQ9 = parseFloat(q.get("MQ9"));
     const suhu = parseFloat(q.get("suhu"));
 
-    let hasil = "test"; // default jika parameter tidak ada
+    let hasil = "Tidak ada makanan"; // default jika parameter tidak ada
 
     if (!isNaN(MQ135) && !isNaN(MQ9) && !isNaN(suhu)) {
       const model = await loadModel();
@@ -39,3 +39,4 @@
 
   predict();
 </script>
+
