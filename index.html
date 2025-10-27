@@ -1,7 +1,7 @@
 <script>
   async function loadModel() {
     try {
-      const res = await fetch("https://raw.githubusercontent.com/risqikhoirul/e-nose/refs/heads/main/model_e_nose.json");
+      const res = await fetch("./model_e_nose.json");
       return await res.json();
     } catch (e) {
       // fallback default
