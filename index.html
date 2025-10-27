@@ -1,7 +1,7 @@
 <script>
   async function loadModel() {
     try {
-      const res = await fetch("./model_e_nose.json");
+      const res = await fetch("https://risqikhoirul.github.io/e-nose/model_e_nose.json");
       return await res.json();
     } catch (e) {
       // fallback default
@@ -39,5 +39,6 @@
 
   predict();
 </script>
+
 
 
