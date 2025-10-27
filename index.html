@@ -1,45 +1,25 @@
+<script src="rf_model.js"></script>
 <script>
-  async function loadModel() {
-    try {
-      const res = await fetch("model_e_nose.json");
-      return await res.json();
-    } catch (e) {
-      // fallback default
-      return {
-        classes: ["Makanan Basi", "Makanan Segar"],
-        weights: [0.52, 0.37, 0.11],
-        threshold: 3500,
-      };
-    }
+  // Ambil parameter dari URL
+  const q = new URLSearchParams(location.search);
+  const MQ135 = parseFloat(q.get("MQ135"));
+  const MQ9   = parseFloat(q.get("MQ9"));
+  const suhu  = parseFloat(q.get("suhu"));
+
+  let hasil = "Tidak ada makanan";
+
+  if (!isNaN(MQ135) && !isNaN(MQ9) && !isNaN(suhu)) {
+    // Ambil bobot dari model JS
+    const w = rf_model.weights;
+    const t = rf_model.threshold;
+
+    // Rumus mirip test_model() di Python
+    const skor = MQ135 * w[0] + MQ9 * w[1] + suhu * w[2];
+    hasil = skor > t ? rf_model.classes[1] : rf_model.classes[0];
   }
 
-  async function predict() {
-    const q = new URLSearchParams(location.search);
-    const MQ135 = parseFloat(q.get("MQ135"));
-    const MQ9 = parseFloat(q.get("MQ9"));
-    const suhu = parseFloat(q.get("suhu"));
-
-    let hasil = "Tidak ada makanan"; // default jika parameter tidak ada
-
-    if (!isNaN(MQ135) && !isNaN(MQ9) && !isNaN(suhu)) {
-      const model = await loadModel();
-      const w = model.weights;
-      const t = model.threshold;
-
-      // Rumus mirip Python test_model()
-      const skor = MQ135 * w[0] + MQ9 * w[1] + suhu * w[2];
-      hasil = skor > t ? model.classes[1] : model.classes[0];
-    }
-
-    // Output plain text agar ESP32 bisa baca langsung
-    document.open("text/plain");
-    document.write(hasil);
-    document.close();
-  }
-
-  predict();
+  // Output plain text agar ESP32 bisa baca langsung
+  document.open("text/plain");
+  document.write(hasil);
+  document.close();
 </script>
-
-
-
-
