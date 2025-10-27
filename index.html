@@ -1,0 +1,17 @@
+<script>
+  const q = new URLSearchParams(location.search);
+  const MQ135 = parseFloat(q.get("MQ135"));
+  const MQ9 = parseFloat(q.get("MQ9"));
+  const suhu = parseFloat(q.get("suhu"));
+
+  let hasil = "Belum Ada Makanan";
+
+  if (!isNaN(MQ135) && !isNaN(MQ9) && !isNaN(suhu)) {
+    const skor = MQ135 * 0.4 + MQ9 * 0.4 + suhu * 5;
+    hasil = skor > 1000 ? "Makanan Segar" : "Makanan Basi";
+  }
+
+  document.open("text/plain");
+  document.write(hasil);
+  document.close();
+</script>
